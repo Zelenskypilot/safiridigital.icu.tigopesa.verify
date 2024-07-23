@@ -470,38 +470,31 @@ textarea {
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const datepicker = document.getElementById('datepicker-input');
-        const calendar = document.getElementById('calendar');
+    const datepicker = document.getElementById('datepicker-input');
+    const calendar = document.getElementById('calendar');
 
-        datepicker.addEventListener("focus", function() {
-            const currentDate = new Date();
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth() + 1;
-            const day = currentDate.getDate();
-            const formattedDate = year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
-            
-            datepicker.value = formattedDate;
-        });
-
-        calendar.addEventListener("click", function(event) {
-            if (event.target.classList.contains("date-option")) {
-                datepicker.value = event.target.textContent;
-                calendar.style.display = "none";
-            }
-        });
+    datepicker.addEventListener("focus", function() {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+        const formattedDate = year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
+        
+        datepicker.value = formattedDate;
     });
-</script>
 
+    calendar.addEventListener("click", function(event) {
+        if (event.target.classList.contains("date-option")) {
+            datepicker.value = event.target.textContent;
+            calendar.style.display = "none";
+        }
+    });
 
-
-
-
-<!-- partial -->
-  <script>
     initMultiStepForm();
+});
 
 function initMultiStepForm() {
-    const progressNumber = document.querySelectorAll(".step").length;
+    const progressNumber = 4; // Set the progressNumber to 4
     const slidePage = document.querySelector(".slide-page");
     const submitBtn = document.querySelector(".submit");
     const progressText = document.querySelectorAll(".step p");
@@ -527,7 +520,6 @@ function initMultiStepForm() {
             event.preventDefault();
 
             inputsValid = validateInputs(this);
-            // inputsValid = true;
 
             if (inputsValid) {
                 slidePage.style.marginLeft = `-${
@@ -553,15 +545,12 @@ function initMultiStepForm() {
             current -= 1;
         });
     }
-    submitBtn.addEventListener("click", function () {
-        bullet[current - 1].classList.add("active");
-        progressCheck[current - 1].classList.add("active");
-        progressText[current - 1].classList.add("active");
-        current += 1;
-        setTimeout(function () {
-            alert("Your Form Successfully Signed up");
-            location.reload();
-        }, 800);
+
+    submitBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        if (validateInputs(this)) {
+            document.querySelector("form").submit();
+        }
     });
 
     function validateInputs(ths) {
@@ -580,7 +569,7 @@ function initMultiStepForm() {
         }
         return inputsValid;
     }
-}
+                              }
   </script>
 
 
